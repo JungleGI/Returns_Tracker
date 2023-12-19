@@ -41,10 +41,12 @@ for ticker in tickers:
     df = pd.concat([df,df_tmp])
 
 #Formatting Data
-df.set_index('date', inplace=True)
+df['date'] = pd.to_datetime(df.date).dt.tz_localize(None)
+df['Time'] = df['date'].dt.strftime('%m-%d %H:%M')
+df.set_index('Time', inplace=True)
 df = df[['priceUsd','Ticker']]
 df.columns = ['price','ticker']
-df1 = df.pivot_table(index=['date'],columns='ticker', values=['price'])
+df1 = df.pivot_table(index=['Time'],columns='ticker', values=['price'])
 df1.columns = [col[1] for col in df1.columns.values]
 
 #Calcs
